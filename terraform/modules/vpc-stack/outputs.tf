@@ -1,12 +1,12 @@
-output "nyanbug_vpc_id" {
+output "bugnyan_vpc_id" {
   value = aws_vpc.bugnyan.id
 }
 
-output "nyanbug_public_subnets_ids" {
+output "bugnyan_public_subnets_ids" {
   value = [for s in aws_subnet.bugnyan_public_subnets : s.id]
 }
 
-output "nyanbug_private_subnets_ids" {
+output "bugnyan_private_subnets_ids" {
   value = [for s in aws_subnet.bugnyan_private_subnets : s.id]
 }
 
