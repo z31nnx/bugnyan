@@ -24,7 +24,7 @@ resource "aws_security_group" "bugnyan_web_alb_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_web_alb_sg_name}"
+      Name = "${var.bugnyan_web_alb_sg_name}-web-alb-sg"
     }
   )
 }
@@ -55,7 +55,7 @@ resource "aws_security_group" "bugnyan_web_asg_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_web_asg_sg_name}"
+      Name = "${var.bugnyan_web_asg_sg_name}-web-asg-sg"
     }
   )
 }
@@ -86,7 +86,7 @@ resource "aws_security_group" "bugnyan_app_alb_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_app_alb_sg_name}"
+      Name = "${var.bugnyan_app_alb_sg_name}-app-alb-sg"
     }
   )
 }
@@ -117,7 +117,7 @@ resource "aws_security_group" "bugnyan_app_asg_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_app_asg_sg_name}"
+      Name = "${var.bugnyan_app_asg_sg_name}-app-asg-sg"
     }
   )
 }
@@ -148,7 +148,7 @@ resource "aws_security_group" "bugnyan_database_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_database_sg_name}"
+      Name = "${var.bugnyan_database_sg_name}-database-sg"
     }
   )
 }
