@@ -43,10 +43,10 @@ resource "aws_nat_gateway" "bugnyan_natgw" {
 resource "aws_subnet" "bugnyan_public_subnets" {
   for_each = local.public_subnets
 
-  vpc_id                  = aws_vpc.bugnyan.id
-  cidr_block              = each.value.cidr_block
-  availability_zone       = each.value.az
-  map_public_ip_on_launch = true
+  vpc_id                                      = aws_vpc.bugnyan.id
+  cidr_block                                  = each.value.cidr_block
+  availability_zone                           = each.value.az
+  map_public_ip_on_launch                     = true
   enable_resource_name_dns_a_record_on_launch = true
 
   tags = merge(
@@ -59,11 +59,11 @@ resource "aws_subnet" "bugnyan_public_subnets" {
 resource "aws_subnet" "bugnyan_private_subnets" {
   for_each = local.private_subnets
 
-  vpc_id                  = aws_vpc.bugnyan.id
-  cidr_block              = each.value.cidr_block
-  availability_zone       = each.value.az
-  map_public_ip_on_launch = false
-  enable_resource_name_dns_a_record_on_launch = true 
+  vpc_id                                      = aws_vpc.bugnyan.id
+  cidr_block                                  = each.value.cidr_block
+  availability_zone                           = each.value.az
+  map_public_ip_on_launch                     = false
+  enable_resource_name_dns_a_record_on_launch = true
 
   tags = merge(
     local.global_tags, {
@@ -82,7 +82,7 @@ resource "aws_route_table" "bugnyan_public_rt" {
 
   tags = merge(
     local.global_tags, {
-    Name = "${var.vpc_name}-public-rt"
+      Name = "${var.vpc_name}-public-rt"
     }
   )
 }
@@ -97,7 +97,7 @@ resource "aws_route_table" "bugnyan_private_rt" {
 
   tags = merge(
     local.global_tags, {
-    Name = "${var.vpc_name}-private-rt"
+      Name = "${var.vpc_name}-private-rt"
     }
   )
 }

@@ -1,7 +1,7 @@
 locals {
   global_tags = var.global_tags
   allow_all   = "0.0.0.0/0"
-  public_subnets = {         # main subnets 
+  public_subnets = { # main subnets 
     public_subnet_1 = { cidr_block = "10.0.1.0/24", az = "us-east-1a" }
     public_subnet_2 = { cidr_block = "10.0.2.0/24", az = "us-east-1b" }
     public_subnet_3 = { cidr_block = "10.0.3.0/24", az = "us-east-1c" }
@@ -17,3 +17,4 @@ locals {
 data "aws_availability_zones" "available" {
   state = "available"
 }
+
