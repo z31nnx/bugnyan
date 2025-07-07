@@ -28,7 +28,18 @@
       overflow: hidden;
       position: relative;
     }
-    
+
+    #ai-gif {
+      width: 190px;
+      height: auto;
+      margin-bottom: 40px; /* increased space below gif */
+      display: block;
+      border-radius: 12px;
+      border: 2px solid red;
+      box-shadow: 0 0 15px red;
+      position: relative;
+      z-index: 0; /* place behind text */
+    }
 
     #top-bar {
       background: #000;
@@ -85,16 +96,16 @@
     #screen {
       flex: 1;
       background: #111;
-      padding: 15px 20px;
+      padding: 40px 20px 20px; /* added padding-top to clear gif overlap */
       font-size: 18px;
       display: flex;
       flex-direction: column;
-      color: white;
+      align-items: center;
+      justify-content: flex-start; /* changed from center */
       box-sizing: border-box;
       position: relative;
       overflow-y: hidden;
-      justify-content: center;
-      align-items: center;
+      z-index: 10; /* put screen content on top */
     }
 
     #chat-messages {
@@ -118,10 +129,12 @@
       max-width: 70%;
       word-wrap: break-word;
       line-height: 1.3;
+      position: relative;
+      z-index: 10;
     }
 
     .person {
-      background: #2c2c2c;
+      background-color: #2c2c2c; /* solid background so border/shadow doesn't bleed */
       align-self: flex-start;
       color: #ddd;
       border-top-left-radius: 0;
@@ -159,29 +172,30 @@
     }
 
     #input-text {
-      padding: 15px;
+      padding: 12px;
       width: 100%;
-      font-size: 20px;
+      max-width: 280px;
+      font-size: 18px;
       border-radius: 10px;
       border: none;
       outline: none;
       color: red;
       background-color: black;
       border: 1.5px solid red;
-      margin-bottom: 10px;
+      margin-bottom: 25px;
       box-sizing: border-box;
+      text-align: center;
     }
 
     #confirm-button {
-      padding: 12px;
-      font-size: 18px;
+      padding: 10px 20px;
+      font-size: 16px;
       border-radius: 10px;
       background-color: red;
       border: none;
       color: black;
       font-weight: bold;
       cursor: pointer;
-      width: 100%;
       box-sizing: border-box;
       transition: background 0.3s;
     }
@@ -209,6 +223,7 @@
   <img id="banner" src="https://www.jigokutsushin.it/images/banner.png" />
   <div id="separator"></div>
   <div id="screen">
+    <img id="ai-gif" src="https://i.pinimg.com/originals/90/51/cd/9051cd1699d8afa08225fdb6cd8ca1f4.gif" />
     <input type="text" id="input-text" placeholder="Enter your name..." />
     <button id="confirm-button">Enter</button>
   </div>
@@ -227,90 +242,69 @@
 
   const chatTree = {
     start: {
-      message: "Hello, welcome! How are you feeling today?",
+      message: "You have summoned me. Speak the name of the one you seek revenge upon.",
       choices: [
-        { text: "Good, thanks!", next: "good" },
-        { text: "Not so great...", next: "bad" }
+        { text: "I have someone in mind.", next: "namePrompt" },
+        { text: "No. Maybe this was a mistake.", next: "regret" }
       ]
     },
-    good: {
-      message: "That's great to hear! What do you want to do?",
+    namePrompt: {
+      message: "Very well. Their name burns in your heart. Do you wish to curse them?",
       choices: [
-        { text: "Chat more", next: "chatMore" },
-        { text: "Say goodbye", next: "goodbye" }
+        { text: "Yes. I want revenge.", next: "explainPrice" },
+        { text: "I'm unsure...", next: "hesitate" }
       ]
     },
-    bad: {
-      message: "I'm sorry to hear that. Want to talk about it?",
+    regret: {
+      message: "Once the thread is pulled, fate cannot be unwoven. Be certain before you return.",
+      choices: []
+    },
+    hesitate: {
+      message: "Hesitation clouds the soul. But I will wait... until your hatred ripens.",
+      choices: []
+    },
+    explainPrice: {
+      message: "If you truly wish vengeance, I will exact it. But when one is sent to Hell... you too shall bear the mark.",
       choices: [
-        { text: "Yes, please", next: "talk" },
-        { text: "No, thanks", next: "goodbye" }
+        { text: "I accept the cost.", next: "contractOffer" },
+        { text: "No. I can't do this.", next: "walkAway" }
       ]
     },
-    chatMore: {
-      message: "I'm here to listen. Tell me what's on your mind.",
+    walkAway: {
+      message: "Mercy blooms where hatred dies. Perhaps your soul is still light enough to be spared.",
+      choices: []
+    },
+    contractOffer: {
+      message: "Take this red thread. Once you pull it... the pact is sealed. They will be taken to Hell immediately. But when you die... your soul shall also be damned.",
       choices: [
-        { text: "It's about work", next: "work" },
-        { text: "Just life stuff", next: "life" }
+        { text: "Pull the red thread.", next: "contractComplete" },
+        { text: "I can't pull it.", next: "walkAway" }
       ]
     },
-    talk: {
-      message: "Okay, I'm listening. What's troubling you?",
+    contractComplete: {
+      message: "The deed is done. The thread has been pulled... and their screams echo into eternity.",
       choices: [
-        { text: "Stress", next: "stress" },
-        { text: "Loneliness", next: "lonely" }
+        { text: "What happens now?", next: "endWarning" }
       ]
     },
-    work: {
-      message: "Work can be tough. Try to take breaks and relax.",
-      choices: [
-        { text: "Thanks, I'll try", next: "goodbye" },
-        { text: "Any other advice?", next: "advice" }
-      ]
-    },
-    life: {
-      message: "Life is full of ups and downs. Stay strong!",
-      choices: [
-        { text: "Thanks", next: "goodbye" },
-        { text: "Tell me more", next: "advice" }
-      ]
-    },
-    stress: {
-      message: "Stress is hard. Remember to breathe deeply and take care of yourself.",
-      choices: [
-        { text: "Will do", next: "goodbye" },
-        { text: "Thanks", next: "goodbye" }
-      ]
-    },
-    lonely: {
-      message: "You are never truly alone. Reach out when you need to.",
-      choices: [
-        { text: "I will", next: "goodbye" },
-        { text: "Thank you", next: "goodbye" }
-      ]
-    },
-    advice: {
-      message: "Remember, every day is a new chance. Keep going!",
-      choices: [
-        { text: "Thanks", next: "goodbye" },
-        { text: "Goodbye", next: "goodbye" }
-      ]
-    },
-    goodbye: {
-      message: "Take care! Talk to you soon.",
+    endWarning: {
+      message: "Live the rest of your days knowing your soul is already stained. We will meet again... when your time has come.",
       choices: []
     }
   };
 
+  let chatMessages;
+  let typingInterval;
+
   function scrollToBottom() {
-    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
   function createMessage(text, className) {
-    const div = document.createElement('div');
-    div.classList.add('message', className);
-    div.textContent = text;
-    return div;
+    const msg = document.createElement('div');
+    msg.classList.add('message', className);
+    msg.textContent = text;
+    return msg;
   }
 
   function createChoices(choices) {
@@ -323,6 +317,7 @@
       btn.addEventListener('click', () => {
         addUserMessage(choice.text);
         loadNextNode(choice.next);
+        container.remove(); // ensure choices disappear after selection
       });
       container.appendChild(btn);
     });
@@ -331,33 +326,28 @@
   }
 
   function addUserMessage(text) {
-    const msg = createMessage(text, 'user');
-    chatMessages.appendChild(msg);
+    chatMessages.appendChild(createMessage(text, 'user'));
     scrollToBottom();
   }
 
   function addPersonMessage(text) {
-    const msg = createMessage(text, 'person');
-    chatMessages.appendChild(msg);
+    chatMessages.appendChild(createMessage(text, 'person'));
     scrollToBottom();
   }
-
-  let typingInterval;
-  let chatMessages;
 
   function showTypingIndicator() {
     const typing = document.createElement('div');
     typing.id = 'typing';
-    typing.classList.add('typing');
-    typing.textContent = "Ai Enma is typing";
+    typing.className = 'typing';
+    typing.textContent = 'Ai Enma is typing';
     chatMessages.appendChild(typing);
     scrollToBottom();
 
-    let dotCount = 0;
+    let dots = 0;
     typingInterval = setInterval(() => {
-      dotCount = (dotCount + 1) % 5;
-      typing.textContent = "Ai Enma is typing" + ".".repeat(dotCount);
-    }, 250);
+      dots = (dots + 1) % 4;
+      typing.textContent = 'Ai Enma is typing' + '.'.repeat(dots);
+    }, 300);
   }
 
   function hideTypingIndicator() {
@@ -366,24 +356,21 @@
     if (typing) typing.remove();
   }
 
-  function loadNextNode(nodeKey) {
-    const choicesEl = document.getElementById('choices');
-    if (choicesEl) choicesEl.remove();
+  function loadNextNode(key) {
+    hideTypingIndicator();
+    if (!chatTree[key]) return;
 
-    if (!nodeKey || !chatTree[nodeKey]) return;
+    const node = chatTree[key];
 
-    const node = chatTree[nodeKey];
     showTypingIndicator();
-
     setTimeout(() => {
       hideTypingIndicator();
       addPersonMessage(node.message);
-
       if (node.choices.length > 0) {
-        const choicesEl = createChoices(node.choices);
-        screen.appendChild(choicesEl);
+        const choices = createChoices(node.choices);
+        screen.appendChild(choices);
       }
-    }, 1300);
+    }, 1200);
   }
 
   function startChat(name) {
@@ -394,46 +381,34 @@
     chatMessages.id = 'chat-messages';
     screen.appendChild(chatMessages);
 
-    addPersonMessage(`Hi ${name}, welcome!`);
+    addPersonMessage(`Hello ${name}... I’ve been waiting.`);
     loadNextNode('start');
   }
 
-  // Confirm button click handler
   function onConfirmClick() {
     const name = inputText.value.trim();
     if (name) {
       banner.style.display = 'none';
+      separator.style.display = 'none';
       inputText.style.display = 'none';
       confirmButton.style.display = 'none';
-      separator.style.display = 'none';
       startChat(name);
     }
   }
 
   confirmButton.addEventListener('click', onConfirmClick);
 
-  // Close button handler
   closeButton.addEventListener('click', () => {
     topBar.style.display = 'none';
-
     banner.style.display = '';
     separator.style.display = '';
     screen.innerHTML = '';
-    inputText = document.createElement('input');
-    inputText.type = 'text';
-    inputText.id = 'input-text';
-    inputText.placeholder = 'Enter your name...';
-    inputText.style.display = '';
-
-    confirmButton = document.createElement('button');
-    confirmButton.id = 'confirm-button';
-    confirmButton.textContent = 'Enter';
-    confirmButton.style.display = '';
-
     screen.appendChild(inputText);
     screen.appendChild(confirmButton);
+    inputText.style.display = '';
+    confirmButton.style.display = '';
 
-    confirmButton.addEventListener('click', onConfirmClick);
+    inputText.value = '';
   });
 </script>
 
