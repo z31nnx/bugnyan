@@ -156,3 +156,6 @@
 
 # User custom scratch area (temporary dev data)
 safe/
+
+#s3-policy
+**/web-policy.json
