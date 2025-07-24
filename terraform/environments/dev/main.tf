@@ -7,6 +7,19 @@ terraform {
   }
 }
 
+module "s3-stack" {
+  source      = "../../modules/s3-stack"
+  global_tags = local.global_tags
+}
+
+module "cloudfront-stack" {
+  source                        = "../../modules/cloudfront-stack"
+  web_bucket_domain_name        = module.s3-stack.web_bucket_domain_name
+  web_cloudfront_logs_bucket_domain_name = module.s3-stack.web_cloudfront_logs_bucket_domain_name
+  global_tags                   = local.global_tags
+}
+
+/*
 module "vpc-stack" {
   source      = "../../modules/vpc-stack"
   vpc_name    = var.vpc_name
@@ -53,3 +66,4 @@ module "alb-stack" {
   bugnyan_vpc_id                 = module.vpc-stack.bugnyan_vpc_id
   global_tags                    = local.global_tags
 }
+*/
