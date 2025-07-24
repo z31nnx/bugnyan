@@ -560,8 +560,40 @@ document.getElementById('tarot-close-button').addEventListener('click', () => {
 
 
 </script>
+<div id="bg-player" style="display:none;"></div>
+<div id="chat-player" style="display:none;"></div>
+
+<body>
+  <div id="player" style="display: none;"></div>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let isStarted = false;
+    document.body.addEventListener('click', function handleClick() {
+      if (isStarted) return;
+      isStarted = true;
+      document.body.removeEventListener('click', handleClick);
+      new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: 'HW1G1GbWgHA',
+        playerVars: {
+          autoplay: 1,
+          loop: 1,
+          playlist: 'HW1G1GbWgHA'
+        },
+        events: {
+          onReady: function (event) {
+            event.target.setVolume(50); 
+            event.target.playVideo();
+          }
+        }
+      });
 
 
-
+      document.querySelector('.notice').textContent = 'Music playing... enjoy the experience.';
+    });
+  </script>
 </body>
 </html>
+
+// VtLZSnqUqcY (other audio I need to add)
