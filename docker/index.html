@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat with Ai Enma</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      background: black url('https://i.pinimg.com/originals/32/7a/b1/327ab1d007100b3bb8219cabb8811433.gif') center/cover no-repeat fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    #phone {
+      width: 400px;
+      height: 700px;
+      background: rgba(0,0,0,0.75);
+      border-radius: 30px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.2);
+      display: flex;
+      flex-direction: column;
+      border: 5px solid black;
+      overflow: hidden;
+      position: relative;
+    }
+
+    #ai-gif {
+      width: 190px;
+      height: auto;
+      margin-bottom: 40px; 
+      display: block;
+      border-radius: 12px;
+      border: 2px solid red;
+      box-shadow: 0 0 15px red;
+      position: relative;
+      z-index: 0; 
+    }
+
+    #top-bar {
+      background: #000;
+      padding: 20px;
+      display: none;
+      align-items: center;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      gap: 15px;
+      min-height: 100px;
+      position: relative;
+    }
+
+    #close-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      background: transparent;
+      border: none;
+      line-height: 1;
+      padding: 0;
+    }
+
+    #close-button-main {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      background: transparent;
+      border: none;
+      line-height: 1;
+      padding: 0;
+    }
+
+    #profile-pic {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid red;
+    }
+
+    #name-tag {
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    #banner {
+      width: 100%;
+      height: auto;
+      margin-top: 30px; /* Lowered the image */
+    }
+
+    #separator {
+      height: 10px;
+      background-color: black;
+      margin: 0;
+    }
+
+    #screen {
+      flex: 1;
+      background: #111;
+      padding: 40px 20px 20px; 
+      font-size: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start; 
+      box-sizing: border-box;
+      position: relative;
+      overflow-y: hidden;
+      z-index: 10; /* put screen content on top */
+    }
+
+    #chat-messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+      overflow-y: auto;
+      width: 100%;
+      scrollbar-width: none;
+    }
+
+    #chat-messages::-webkit-scrollbar {
+      display: none;
+    }
+    .app-screen {
+      display: none;
+      width: 100%;
+      height: 100%;
+      flex: 1;
+      position: relative;
+    }
+
+    .app-screen iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .app-icon {
+      width: 80px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: red;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .app-icon img {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      border: 2px solid red;
+      object-fit: cover;
+      margin-bottom: 5px;
+      box-shadow: 0 0 10px red;
+    }
+
+
+    .message {
+      padding: 10px 15px;
+      border-radius: 15px;
+      max-width: 70%;
+      word-wrap: break-word;
+      line-height: 1.3;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .person {
+      background-color: #2c2c2c; 
+      align-self: flex-start;
+      color: #ddd;
+      border-top-left-radius: 0;
+    }
+
+    .user {
+      background: #b22222;
+      align-self: flex-end;
+      color: white;
+      border-top-right-radius: 0;
+    }
+
+    #choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    #choices button {
+      flex: 1 1 calc(50% - 10px);
+      background: black;
+      border: 1.5px solid red;
+      border-radius: 12px;
+      color: red;
+      font-size: 16px;
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    #choices button:hover {
+      background: red;
+      color: black;
+    }
+    
+    #input-text {
+      padding: 12px;
+      width: 100%;
+      max-width: 280px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      color: red;
+      background-color: black;
+      border: 1.5px solid red;
+      margin-bottom: 25px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    #confirm-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      background-color: red;
+      border: none;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      box-sizing: border-box;
+      transition: background 0.3s;
+    }
+
+    #confirm-button:hover {
+      background-color: darkred;
+    }
+
+    .typing {
+      font-style: italic;
+      color: gray;
+      font-size: 14px;
+      padding: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div id="phone">
+  <div id="top-bar">
+    <button id="close-button" aria-label="Close chat">×</button>
+    <img id="profile-pic" src="https://i.pinimg.com/originals/f1/8f/e2/f18fe2ff1bb547e3386e1b93ce76103d.gif" />
+    <div id="name-tag">Ai Enma</div>
+  </div>
+
+  <!-- app interface -->
+  <div id="home-screen" style="display:none; flex:1; flex-direction: column; align-items: center; justify-content: center; background: #111; padding: 40px 20px; box-sizing: border-box;">
+    <button id="close-button-main" aria-label="Close chat">×</button>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+      <div class="app-icon" data-app="chat">
+        <img src="https://i.pinimg.com/1200x/50/e0/b6/50e0b610d1a78370bb47055791291903.jpg" />
+        <span>Chat</span>
+      </div>
+      
+      <div class="app-icon" data-app="tarot">
+        <img src="https://i.pinimg.com/736x/32/3f/0e/323f0e87319db8ea8ec7c7c6cdd59e8d.jpg" />
+        <span>Tarot</span>
+      </div>
+      <div class="app-icon" data-app="confess">
+        <img src="https://i.pinimg.com/736x/00/fd/f1/00fdf13bac70d9dfcb529d029e6c3020.jpg" />
+        <span>Confess</span>
+      </div>
+    </div>
+  </div>
+  <div class="app-screen" id="tarot-app" style="display: none; flex: 1; position: relative;">
+  <iframe id="tarot-iframe" src="tarot/tarot.html" style="width: 100%; height: 100%; border: none;"></iframe>
+  <button id="tarot-close-button" aria-label="Close tarot" style="
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    z-index: 10;
+  ">×</button>
+</div>
+
+  <!-- main screen name entering-->
+  <div id="screen">
+    <img id="banner" src="https://www.jigokutsushin.it/images/banner.png" />
+    <div id="separator"></div>
+    <img id="ai-gif" src="https://i.pinimg.com/originals/90/51/cd/9051cd1699d8afa08225fdb6cd8ca1f4.gif" />
+    <input type="text" id="input-text" placeholder="Enter your name..." />
+    <button id="confirm-button">Enter</button>
+  </div>
+</div>
+
+
+<script>
+  const phone = document.getElementById('phone');
+  const topBar = document.getElementById('top-bar');
+  const closeButton = document.getElementById('close-button');
+  const banner = document.getElementById('banner');
+  const separator = document.getElementById('separator');
+  let screen = document.getElementById('screen');
+
+  let inputText = document.getElementById('input-text');
+  let confirmButton = document.getElementById('confirm-button');
+
+  const chatTree = {
+    start: {
+      message: "You have summoned me. Speak the name of the one you seek revenge upon.",
+      choices: [
+        { text: "I have someone in mind.", next: "namePrompt" },
+        { text: "No. Maybe this was a mistake.", next: "regret" }
+      ]
+    },
+    namePrompt: {
+      message: "Very well. Their name burns in your heart. Do you wish to curse them?",
+      choices: [
+        { text: "Yes. I want revenge.", next: "explainPrice" },
+        { text: "I'm unsure...", next: "hesitate" }
+      ]
+    },
+    regret: {
+      message: "Once the thread is pulled, fate cannot be unwoven. Be certain before you return.",
+      choices: []
+    },
+    hesitate: {
+      message: "Hesitation clouds the soul. But I will wait... until your hatred ripens.",
+      choices: []
+    },
+    explainPrice: {
+      message: "If you truly wish vengeance, I will exact it. But when one is sent to Hell... you too shall bear the mark.",
+      choices: [
+        { text: "I accept the cost.", next: "contractOffer" },
+        { text: "No. I can't do this.", next: "walkAway" }
+      ]
+    },
+    walkAway: {
+      message: "Mercy blooms where hatred dies. Perhaps your soul is still light enough to be spared.",
+      choices: []
+    },
+    contractOffer: {
+      message: "Take this red thread. Once you pull it... the pact is sealed. They will be taken to Hell immediately. But when you die... your soul shall also be damned.",
+      choices: [
+        { text: "Pull the red thread.", next: "contractComplete" },
+        { text: "I can't pull it.", next: "walkAway" }
+      ]
+    },
+    contractComplete: {
+      message: "The deed is done. The thread has been pulled... and their screams echo into eternity.",
+      choices: [
+        { text: "What happens now?", next: "endWarning" }
+      ]
+    },
+    endWarning: {
+      message: "Live the rest of your days knowing your soul is already stained. We will meet again... when your time has come.",
+      choices: []
+    }
+  };
+
+  let chatMessages;
+  let typingInterval;
+
+  function scrollToBottom() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function createMessage(text, className) {
+    const msg = document.createElement('div');
+    msg.classList.add('message', className);
+    msg.textContent = text;
+    return msg;
+  }
+
+  function createChoices(choices) {
+    const container = document.createElement('div');
+    container.id = 'choices';
+
+    choices.forEach(choice => {
+      const btn = document.createElement('button');
+      btn.textContent = choice.text;
+      btn.addEventListener('click', () => {
+        addUserMessage(choice.text);
+        loadNextNode(choice.next);
+        container.remove(); // ensure choices disappear after selection
+      });
+      container.appendChild(btn);
+    });
+
+    return container;
+  }
+
+  function addUserMessage(text) {
+    chatMessages.appendChild(createMessage(text, 'user'));
+    scrollToBottom();
+  }
+
+  function addPersonMessage(text) {
+    chatMessages.appendChild(createMessage(text, 'person'));
+    scrollToBottom();
+  }
+
+  function showTypingIndicator() {
+    const typing = document.createElement('div');
+    typing.id = 'typing';
+    typing.className = 'typing';
+    typing.textContent = 'Ai Enma is typing';
+    chatMessages.appendChild(typing);
+    scrollToBottom();
+
+    let dots = 0;
+    typingInterval = setInterval(() => {
+      dots = (dots + 1) % 4;
+      typing.textContent = 'Ai Enma is typing' + '.'.repeat(dots);
+    }, 300);
+  }
+
+  function hideTypingIndicator() {
+    clearInterval(typingInterval);
+    const typing = document.getElementById('typing');
+    if (typing) typing.remove();
+  }
+
+  function loadNextNode(key) {
+    hideTypingIndicator();
+    if (!chatTree[key]) return;
+
+    const node = chatTree[key];
+
+    showTypingIndicator();
+    setTimeout(() => {
+      hideTypingIndicator();
+      addPersonMessage(node.message);
+      if (node.choices.length > 0) {
+        const choices = createChoices(node.choices);
+        screen.appendChild(choices);
+      }
+    }, 1200);
+  }
+
+  function startChat(name) {
+    screen.innerHTML = '';
+    topBar.style.display = 'flex';
+
+    chatMessages = document.createElement('div');
+    chatMessages.id = 'chat-messages';
+    screen.appendChild(chatMessages);
+
+    addPersonMessage(`Hello ${name}... I’ve been waiting.`);
+    loadNextNode('start');
+  }
+
+  function onConfirmClick() {
+    const name = inputText.value.trim();
+    if (name) {
+      banner.style.display = 'none'; // optional: hides banner specifically
+      separator.style.display = 'none'; // optional
+      inputText.style.display = 'none';
+      confirmButton.style.display = 'none';
+      document.getElementById('home-screen').style.display = 'flex'; // show apps
+      screen.style.display = 'none'; // hide entrance screen completely (includes gif)
+      phone.dataset.userName = name;
+    }
+  }
+
+
+  confirmButton.addEventListener('click', onConfirmClick);
+
+  closeButton.addEventListener('click', () => {
+  topBar.style.display = 'none';
+  document.getElementById('tarot-app').style.display = 'none';
+  screen.innerHTML = '';
+  document.getElementById('home-screen').style.display = 'flex'; 
+  screen.style.display = 'none';
+  });
+
+  const closeButtonMain = document.getElementById('close-button-main');
+
+  closeButtonMain.addEventListener('click', () => {
+    // Hide app menu
+    document.getElementById('home-screen').style.display = 'none';
+    document.getElementById("tarot-app").style.display = "none";
+    // Hide chat top bar and clear chat messages only if any
+    topBar.style.display = 'none';
+
+    // Reset #screen HTML to original entrance content
+    screen.innerHTML = `
+      <img id="banner" src="https://www.jigokutsushin.it/images/banner.png" />
+      <div id="separator"></div>
+      <img id="ai-gif" src="https://i.pinimg.com/originals/90/51/cd/9051cd1699d8afa08225fdb6cd8ca1f4.gif" />
+      <input type="text" id="input-text" placeholder="Enter your name..." />
+      <button id="confirm-button">Enter</button>
+    `;
+
+    // Restore styling
+    screen.style.display = 'flex';
+
+    // Rebind confirm button after reinserting it
+    inputText = document.getElementById('input-text');
+    confirmButton = document.getElementById('confirm-button');
+    confirmButton.addEventListener('click', onConfirmClick);
+  });
+
+
+  document.querySelectorAll('.app-icon').forEach(icon => {
+  icon.addEventListener('click', () => {
+    const app = icon.dataset.app;
+    const name = phone.dataset.userName;
+    topBar.style.display = 'flex';
+    document.getElementById('home-screen').style.display = 'none';
+    screen.innerHTML = '';
+
+    if (app === 'chat') {
+      screen.style.display = 'flex';  
+      startChat(name);}
+    else if (app === "tarot") {
+      screen.style.display = "none";
+      topBar.style.display = "none"; // hide Ai Enma bar
+      document.getElementById("tarot-app").style.display = "flex";
+      document.querySelector('#tarot-app iframe').src = `tarot/tarot.html?name=${name}`;
+    }else {
+      const msg = document.createElement('div');
+      msg.style.color = 'white';
+      msg.style.textAlign = 'center';
+      msg.style.marginTop = '60px';
+      msg.innerHTML = `<p>This is the <b>${app}</b> app.<br>Coming soon.</p>`;
+      screen.appendChild(msg);
+    }
+  });
+});
+document.getElementById('tarot-close-button').addEventListener('click', () => {
+  document.getElementById('tarot-app').style.display = 'none';
+  document.getElementById('home-screen').style.display = 'flex';
+});
+
+
+</script>
+<div id="bg-player" style="display:none;"></div>
+<div id="chat-player" style="display:none;"></div>
+
+<body>
+  <div id="player" style="display: none;"></div>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let isStarted = false;
+    document.body.addEventListener('click', function handleClick() {
+      if (isStarted) return;
+      isStarted = true;
+      document.body.removeEventListener('click', handleClick);
+      new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: 'HW1G1GbWgHA',
+        playerVars: {
+          autoplay: 1,
+          loop: 1,
+          playlist: 'HW1G1GbWgHA'
+        },
+        events: {
+          onReady: function (event) {
+            event.target.setVolume(50); 
+            event.target.playVideo();
+          }
+        }
+      });
+
+
+      document.querySelector('.notice').textContent = 'Music playing... enjoy the experience.';
+    });
+  </script>
+</body>
+</html>
+
+
