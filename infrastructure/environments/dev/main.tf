@@ -8,7 +8,7 @@ terraform {
 }
 
 module "s3-stack" {
-  source      = "../../modules/s3-stack"
+  source      = "../../modules/s3--static-site-stack"
   global_tags = local.global_tags
 }
 
