@@ -1,29 +1,29 @@
 # Tags
-variable "Project" {}
-variable "Environment" {}
-variable "Owner" {}
-variable "Terraform" {}
+variable "project" {}
+variable "environment" {}
+variable "owner" {}
+variable "managed_by" {}
 
 # VPC
 variable "vpc_name" {}
 variable "cidr_block" {}
 
 # IAM 
-variable "role_name" {}
+variable "ops_role_name" {}
 
 # Security Groups 
-variable "bugnyan_web_asg_sg_name" {}
-variable "bugnyan_web_alb_sg_name" {}
-variable "bugnyan_app_asg_sg_name" {}
-variable "bugnyan_app_alb_sg_name" {}
-variable "bugnyan_database_sg_name" {}
+variable "web_asg_sg_name" {}
+variable "web_alb_sg_name" {}
+variable "app_asg_sg_name" {}
+variable "app_alb_sg_name" {}
+variable "database_sg_name" {}
 
 # Launch templates 
 variable "web_launch_template_name" {}
 variable "app_launch_template_name" {}
-variable "bugnyan_web_instance_type" {}
-variable "bugnyan_app_instance_type" {}
+variable "web_instance_type" {}
+variable "app_instance_type" {}
 
 # Application load balancers 
-variable "bugnyan_web_load_balancer_name" {}
-variable "bugnyan_app_load_balancer_name" {}
+variable "web_load_balancer_name" {}
+variable "app_load_balancer_name" {}

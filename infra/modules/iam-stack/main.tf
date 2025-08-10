@@ -1,5 +1,5 @@
 resource "aws_iam_role" "bugnyan_ops_role" {
-  name        = var.role_name
+  name        = var.ops_role_name
   description = "ops role to access SSM and CloudWatch monitoring"
 
   # Terraform's "jsonencode" function converts a
@@ -20,7 +20,7 @@ resource "aws_iam_role" "bugnyan_ops_role" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.role_name}"
+      Name = "${var.ops_role_name}"
     }
   )
 }

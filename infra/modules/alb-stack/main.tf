@@ -1,25 +1,25 @@
 resource "aws_lb" "bugnyan_web_alb" {
-  name               = var.bugnyan_web_load_balancer_name
+  name               = var.web_load_balancer_name
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [var.bugnyan_web_alb_sg_id]
-  subnets            = var.bugnyan_vpc_public_subnets
+  security_groups    = [var.web_alb_sg_id]
+  subnets            = var.vpc_public_subnets
 
   enable_deletion_protection = false
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_web_load_balancer_name}-web-alb"
+      Name = "${var.web_load_balancer_name}-web-alb"
     }
   )
 }
 
 resource "aws_lb_target_group" "bugnyan_web_alb_tg" {
-  name             = "${var.bugnyan_web_load_balancer_name}-alb-tg"
+  name             = "${var.web_load_balancer_name}-alb-tg"
   port             = 80
   protocol         = "HTTP"
   ip_address_type  = "ipv4"
-  vpc_id           = var.bugnyan_vpc_id
+  vpc_id           = var.vpc_id
   protocol_version = "HTTP1"
   target_type      = "instance"
 
@@ -35,7 +35,7 @@ resource "aws_lb_target_group" "bugnyan_web_alb_tg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_web_load_balancer_name}-alb-tg"
+      Name = "${var.web_load_balancer_name}-alb-tg"
     }
   )
 }
@@ -52,27 +52,27 @@ resource "aws_lb_listener" "bugnyan_web_alb_listener" {
 }
 
 resource "aws_lb" "bugnyan_app_alb" {
-  name               = var.bugnyan_app_load_balancer_name
+  name               = var.app_load_balancer_name
   internal           = true
   load_balancer_type = "application"
-  security_groups    = [var.bugnyan_app_alb_sg_id]
-  subnets            = var.bugnyan_vpc_private_subnets
+  security_groups    = [var.app_alb_sg_id]
+  subnets            = var.vpc_private_subnets
 
   enable_deletion_protection = false
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_app_load_balancer_name}-app-alb"
+      Name = "${var.app_load_balancer_name}-app-alb"
     }
   )
 }
 
 resource "aws_lb_target_group" "bugnyan_app_alb_tg" {
-  name             = "${var.bugnyan_app_load_balancer_name}-alb-tg"
+  name             = "${var.app_load_balancer_name}-alb-tg"
   port             = 80
   protocol         = "HTTP"
   ip_address_type  = "ipv4"
-  vpc_id           = var.bugnyan_vpc_id
+  vpc_id           = var.vpc_id
   protocol_version = "HTTP1"
   target_type      = "instance"
 
@@ -88,7 +88,7 @@ resource "aws_lb_target_group" "bugnyan_app_alb_tg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_app_load_balancer_name}-alb-tg"
+      Name = "${var.app_load_balancer_name}-alb-tg"
     }
   )
 }
