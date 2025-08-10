@@ -1,8 +1,8 @@
 locals {
   global_tags = {
-    Project     = var.Project
-    Environment = var.Environment
-    Owner       = var.Owner
-    Terraform   = var.Terraform
+    project     = var.project
+    environment = var.environment
+    owner       = var.owner
+    managed_by  = var.managed_by
   }
 }

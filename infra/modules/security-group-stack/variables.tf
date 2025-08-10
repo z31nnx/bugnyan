@@ -2,10 +2,10 @@ variable "global_tags" {
   type = map(string)
 }
 
-variable "bugnyan_vpc_id" {}
+variable "vpc_id" {}
 
-variable "bugnyan_web_asg_sg_name" {}
-variable "bugnyan_web_alb_sg_name" {}
-variable "bugnyan_app_asg_sg_name" {}
-variable "bugnyan_app_alb_sg_name" {}
-variable "bugnyan_database_sg_name" {}
+variable "web_asg_sg_name" {}
+variable "web_alb_sg_name" {}
+variable "app_asg_sg_name" {}
+variable "app_alb_sg_name" {}
+variable "database_sg_name" {}

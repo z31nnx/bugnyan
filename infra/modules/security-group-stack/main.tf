@@ -1,7 +1,7 @@
 resource "aws_security_group" "bugnyan_web_alb_sg" {
-  name        = var.bugnyan_web_alb_sg_name
+  name        = var.web_alb_sg_name
   description = "Allow public entry anywhere"
-  vpc_id      = var.bugnyan_vpc_id
+  vpc_id      = var.vpc_id
 
   dynamic "ingress" {
     for_each = local.ports.web
@@ -24,15 +24,15 @@ resource "aws_security_group" "bugnyan_web_alb_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_web_alb_sg_name}-web-alb-sg"
+      Name = "${var.web_alb_sg_name}-web-alb-sg"
     }
   )
 }
 
 resource "aws_security_group" "bugnyan_web_asg_sg" {
-  name        = var.bugnyan_web_asg_sg_name
+  name        = var.web_asg_sg_name
   description = "Protect bugnyan web ec2 from public exposure"
-  vpc_id      = var.bugnyan_vpc_id
+  vpc_id      = var.vpc_id
 
   dynamic "ingress" {
     for_each = local.ports.web
@@ -55,15 +55,15 @@ resource "aws_security_group" "bugnyan_web_asg_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_web_asg_sg_name}-web-asg-sg"
+      Name = "${var.web_asg_sg_name}-web-asg-sg"
     }
   )
 }
 
 resource "aws_security_group" "bugnyan_app_alb_sg" {
-  name        = var.bugnyan_app_alb_sg_name
+  name        = var.app_alb_sg_name
   description = "take traffic from bugnyan web ec2 instances"
-  vpc_id      = var.bugnyan_vpc_id
+  vpc_id      = var.vpc_id
 
   dynamic "ingress" {
     for_each = local.ports.app
@@ -86,15 +86,15 @@ resource "aws_security_group" "bugnyan_app_alb_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_app_alb_sg_name}-app-alb-sg"
+      Name = "${var.app_alb_sg_name}-app-alb-sg"
     }
   )
 }
 
 resource "aws_security_group" "bugnyan_app_asg_sg" {
-  name        = var.bugnyan_app_asg_sg_name
+  name        = var.app_asg_sg_name
   description = "allow traffic from the app alb"
-  vpc_id      = var.bugnyan_vpc_id
+  vpc_id      = var.vpc_id
 
   dynamic "ingress" {
     for_each = local.ports.app
@@ -117,15 +117,15 @@ resource "aws_security_group" "bugnyan_app_asg_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_app_asg_sg_name}-app-asg-sg"
+      Name = "${var.app_asg_sg_name}-app-asg-sg"
     }
   )
 }
 
 resource "aws_security_group" "bugnyan_database_sg" {
-  name        = var.bugnyan_database_sg_name
+  name        = var.database_sg_name
   description = "allow traffic bugnyan app ec2 instances"
-  vpc_id      = var.bugnyan_vpc_id
+  vpc_id      = var.vpc_id
 
   dynamic "ingress" {
     for_each = local.ports.database
@@ -148,7 +148,7 @@ resource "aws_security_group" "bugnyan_database_sg" {
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.bugnyan_database_sg_name}-database-sg"
+      Name = "${var.database_sg_name}-database-sg"
     }
   )
 }

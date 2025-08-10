@@ -21,7 +21,7 @@ data "aws_ami" "amazon_linux_2" {
 resource "aws_launch_template" "bugnyan_web_launch_template" {
   name          = var.web_launch_template_name
   image_id      = data.aws_ami.amazon_linux_2.image_id
-  instance_type = var.bugnyan_web_instance_type
+  instance_type = var.web_instance_type
   description   = "The web launch template for bugnyan_web"
 
   user_data = filebase64("${path.module}/web-userdata.sh")
@@ -93,7 +93,7 @@ resource "aws_launch_template" "bugnyan_web_launch_template" {
 resource "aws_launch_template" "bugnyan_app_launch_template" {
   name          = var.app_launch_template_name
   image_id      = data.aws_ami.amazon_linux_2.image_id
-  instance_type = var.bugnyan_app_instance_type
+  instance_type = var.app_instance_type
   description   = "The app launch template for bugnyan_app"
 
   user_data = filebase64("${path.module}/app-userdata.sh")
