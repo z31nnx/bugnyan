@@ -1,29 +1,32 @@
-# Tags
+# Global Tags
 variable "project" {}
 variable "environment" {}
 variable "owner" {}
-variable "managed_by" {}
+variable "managedby" {}
 
-# VPC
-variable "vpc_name" {}
-variable "cidr_block" {}
+# VPC 
+variable "vpc_name" { type = string }
+variable "cidr_block" { type = string }
+variable "public_subnets" {
+  type = map(object({
+    cidr_block = string
+    az         = string
+  }))
+  default = {}
+}
 
-# IAM 
-variable "ops_role_name" {}
+variable "private_subnets" {
+  type = map(object({
+    cidr_block = string
+    az         = string
+  }))
+  default = {}
+}
 
-# Security Groups 
-variable "web_asg_sg_name" {}
-variable "web_alb_sg_name" {}
-variable "app_asg_sg_name" {}
-variable "app_alb_sg_name" {}
-variable "database_sg_name" {}
+variable "nat_public_key" {
+  description = "The key to place the NAT in a specific subnet"
+  default     = "public_subnet_1"
+}
 
-# Launch templates 
-variable "web_launch_template_name" {}
-variable "app_launch_template_name" {}
-variable "web_instance_type" {}
-variable "app_instance_type" {}
-
-# Application load balancers 
-variable "web_load_balancer_name" {}
-variable "app_load_balancer_name" {}
+# Security Groups
+variable "sg_name" { type = string }
