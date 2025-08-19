@@ -1,0 +1,132 @@
+<html lang="en">
+<!-- In tarot.html -->
+<head>
+   <meta charset="UTF-8" />
+   <title> THE TAROT CARDS</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <link rel="stylesheet" href="tarot.css" />
+</head>
+
+<body>
+   <h1>The door awaiting the tarot cards</h1>
+
+   <div class="scene">
+      <div class="carousel">
+         <!-- Eye of Night -->
+         <div class="card" id="card-0" data-index="0">
+            <div class="card-inner">
+               <div class="card-front">
+                  <div class="card-symbol">∅</div>
+                  <div class="card-image"></div>
+                  <div class="card-title">EYE OF NIGHT</div>
+                  <div class="card-num">XXII</div>
+                  <div class="card-content">"Found this in the chapel."</div>
+               </div>
+               <!-- EYE OF NIGHT back -->
+               <div class="card-back">
+                  <div class="card-back-title">EYE OF NIGHT</div>
+                  <div class="card-back-text">
+                     A mysterious card found in the chapel. Its design suggests an ancient origin lost to time.
+                  </div>
+               </div>
+
+            </div>
+         </div>
+
+         
+         <div class="card" id="card-1" data-index="1">
+            <div class="card-inner">
+               <div class="card-front">
+                  <div class="card-symbol">II</div>
+                  <div class="card-image"></div>
+                  <div class="card-title">HIGH PRIESTESS</div>
+                  <div class="card-num">II</div>
+                  <div class="card-content">"Didn't this card mean something?"</div>
+               </div>
+               
+               <div class="card-back">
+                  <div class="card-back-title">HIGH PRIESTESS</div>
+                  <div class="card-back-text">
+                     Symbol of spiritual insight. Heather believed this card represented genuine belief in the unknown.
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="card" id="card-2" data-index="2">
+            <div class="card-inner">
+               <div class="card-front">
+                  <div class="card-symbol">0</div>
+                  <div class="card-image"></div>
+                  <div class="card-title">FOOL</div>
+                  <div class="card-num">0</div>
+                  <div class="card-content">Found in the Aglaophotis book. </div>
+               </div>
+               <!-- FOOL back -->
+               <div class="card-back">
+                  <div class="card-back-title">FOOL</div>
+                  <div class="card-back-text">
+                     An odd card found in Alessa’s room. Connected to innocence and the start of a journey, perhaps hers.
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="card" id="card-3" data-index="3">
+            <div class="card-inner">
+               <div class="card-front">
+                  <div class="card-symbol">XII</div>
+                  <div class="card-image"></div>
+                  <div class="card-title">HANGED MAN</div>
+                  <div class="card-num">XII</div>
+                  <div class="card-content">Found on a gurney in the Morgue.</div>
+               </div>
+               <!-- HANGED MAN back -->
+               <div class="card-back">
+                  <div class="card-back-title">HANGED MAN</div>
+                  <div class="card-back-text">
+                     Found in the morgue.
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="card" id="card-4" data-index="4">
+            <div class="card-inner">
+               <div class="card-front">
+                  <div class="card-symbol">XVIII</div>
+                  <div class="card-image"></div>
+                  <div class="card-title">MOON</div>
+                  <div class="card-num">XVIII</div>
+                  <div class="card-content">Found in the library of the Order's chapel.</div>
+               </div>
+               <!-- MOON back -->
+               <div class="card-back">
+                  <div class="card-back-title">MOON</div>
+                  <div class="card-back-text">
+                     Pulled from the Order’s library. This card hints at illusion, fear, and secrets hiding in the shadows.
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+  
+
+   <div class="controls">
+
+      <button class="prev-btn">Previous</button>
+      <button class="next-btn">Next</button>
+
+   </div>
+   <div class="fog"></div>
+   <div class="static-effect"></div>
+
+   <iframe id="tarot-audio" width="0" height="0" 
+    src="https://www.youtube.com/embed/VtLZSnqUqcY?autoplay=1&mute=1&loop=1&playlist=VtLZSnqUqcY"
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+   <script src="tarot.js"></script>
+</body>
+
+</html>
