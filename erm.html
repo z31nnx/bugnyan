@@ -8,7 +8,7 @@
     body, html {
       height: 100%;
       margin: 0;
-      background: black url('https://i.pinimg.com/originals/88/dd/14/88dd1414cb2944cfdd117a250a03e0b3.gif') center/cover no-repeat fixed;
+      background: black url('https://i.pinimg.com/originals/32/7a/b1/327ab1d007100b3bb8219cabb8811433.gif') center/cover no-repeat fixed;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -24,8 +24,11 @@
       box-shadow: 0 0 30px rgba(255,255,255,0.2);
       display: flex;
       flex-direction: column;
+      border: 5px solid black; /* black border to look more real */
       overflow: hidden;
+      position: relative;
     }
+    
 
     #top-bar {
       background: #000;
@@ -36,6 +39,22 @@
       border-top-right-radius: 30px;
       gap: 15px;
       min-height: 100px;
+      position: relative;
+    }
+
+    #close-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      font-weight: bold;
+      background: transparent;
+      border: none;
+      line-height: 1;
+      padding: 0;
     }
 
     #profile-pic {
@@ -51,6 +70,18 @@
       font-size: 22px;
     }
 
+    #banner {
+      width: 100%;
+      height: auto;
+      margin-top: 30px; /* Lowered the image */
+    }
+
+    #separator {
+      height: 10px;
+      background-color: black;
+      margin: 0;
+    }
+
     #screen {
       flex: 1;
       background: #111;
@@ -62,12 +93,8 @@
       box-sizing: border-box;
       position: relative;
       overflow-y: hidden;
-    }
-
-    #banner {
-      width: 100%;
-      height: auto;
-      margin-bottom: 20px;
+      justify-content: center;
+      align-items: center;
     }
 
     #chat-messages {
@@ -77,6 +104,7 @@
       gap: 8px;
       margin-bottom: 10px;
       overflow-y: auto;
+      width: 100%;
       scrollbar-width: none;
     }
 
@@ -131,23 +159,40 @@
     }
 
     #input-text {
-      margin-top: 10px;
       padding: 15px;
       width: 100%;
-      font-size: 22px;
+      font-size: 20px;
       border-radius: 10px;
       border: none;
       outline: none;
       color: red;
       background-color: black;
       border: 1.5px solid red;
+      margin-bottom: 10px;
       box-sizing: border-box;
+    }
+
+    #confirm-button {
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 10px;
+      background-color: red;
+      border: none;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+      transition: background 0.3s;
+    }
+
+    #confirm-button:hover {
+      background-color: darkred;
     }
 
     .typing {
       font-style: italic;
       color: gray;
-      margin-left: 5px;
       font-size: 14px;
       padding: 5px 0;
     }
@@ -157,20 +202,28 @@
 
 <div id="phone">
   <div id="top-bar">
+    <button id="close-button" aria-label="Close chat">×</button>
     <img id="profile-pic" src="https://i.pinimg.com/originals/f1/8f/e2/f18fe2ff1bb547e3386e1b93ce76103d.gif" />
     <div id="name-tag">Ai Enma</div>
   </div>
+  <img id="banner" src="https://www.jigokutsushin.it/images/banner.png" />
+  <div id="separator"></div>
   <div id="screen">
-    <img id="banner" src="https://www.jigokutsushin.it/images/banner.png" />
-    <input type="text" id="input-text" placeholder="Enter your name..." autofocus />
+    <input type="text" id="input-text" placeholder="Enter your name..." />
+    <button id="confirm-button">Enter</button>
   </div>
 </div>
 
 <script>
-  const inputText = document.getElementById('input-text');
-  const screen = document.getElementById('screen');
+  const phone = document.getElementById('phone');
   const topBar = document.getElementById('top-bar');
+  const closeButton = document.getElementById('close-button');
   const banner = document.getElementById('banner');
+  const separator = document.getElementById('separator');
+  let screen = document.getElementById('screen');
+
+  let inputText = document.getElementById('input-text');
+  let confirmButton = document.getElementById('confirm-button');
 
   const chatTree = {
     start: {
@@ -250,7 +303,7 @@
   };
 
   function scrollToBottom() {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
   }
 
   function createMessage(text, className) {
@@ -289,30 +342,29 @@
     scrollToBottom();
   }
 
- let typingInterval;
+  let typingInterval;
+  let chatMessages;
 
-function showTypingIndicator() {
-  const typing = document.createElement('div');
-  typing.id = 'typing';
-  typing.classList.add('typing');
-  typing.textContent = "Ai Enma is typing";
-  chatMessages.appendChild(typing);
-  scrollToBottom();
+  function showTypingIndicator() {
+    const typing = document.createElement('div');
+    typing.id = 'typing';
+    typing.classList.add('typing');
+    typing.textContent = "Ai Enma is typing";
+    chatMessages.appendChild(typing);
+    scrollToBottom();
 
-  let dotCount = 0;
-  typingInterval = setInterval(() => {
-    dotCount = (dotCount + 1) % 5;
-    typing.textContent =  ".".repeat(dotCount);
-  }, 250);
-}
-
-
-  function hideTypingIndicator() {
-  clearInterval(typingInterval);
-  const typing = document.getElementById('typing');
-  if (typing) typing.remove();
+    let dotCount = 0;
+    typingInterval = setInterval(() => {
+      dotCount = (dotCount + 1) % 5;
+      typing.textContent = "Ai Enma is typing" + ".".repeat(dotCount);
+    }, 250);
   }
 
+  function hideTypingIndicator() {
+    clearInterval(typingInterval);
+    const typing = document.getElementById('typing');
+    if (typing) typing.remove();
+  }
 
   function loadNextNode(nodeKey) {
     const choicesEl = document.getElementById('choices');
@@ -331,10 +383,8 @@ function showTypingIndicator() {
         const choicesEl = createChoices(node.choices);
         screen.appendChild(choicesEl);
       }
-    }, 1300); // Typing delay
+    }, 1300);
   }
-
-  let chatMessages;
 
   function startChat(name) {
     screen.innerHTML = '';
@@ -348,15 +398,42 @@ function showTypingIndicator() {
     loadNextNode('start');
   }
 
-  inputText.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      const name = inputText.value.trim();
-      if (name) {
-        banner.style.display = 'none';
-        inputText.style.display = 'none';
-        startChat(name);
-      }
+  // Confirm button click handler
+  function onConfirmClick() {
+    const name = inputText.value.trim();
+    if (name) {
+      banner.style.display = 'none';
+      inputText.style.display = 'none';
+      confirmButton.style.display = 'none';
+      separator.style.display = 'none';
+      startChat(name);
     }
+  }
+
+  confirmButton.addEventListener('click', onConfirmClick);
+
+  // Close button handler
+  closeButton.addEventListener('click', () => {
+    topBar.style.display = 'none';
+
+    banner.style.display = '';
+    separator.style.display = '';
+    screen.innerHTML = '';
+    inputText = document.createElement('input');
+    inputText.type = 'text';
+    inputText.id = 'input-text';
+    inputText.placeholder = 'Enter your name...';
+    inputText.style.display = '';
+
+    confirmButton = document.createElement('button');
+    confirmButton.id = 'confirm-button';
+    confirmButton.textContent = 'Enter';
+    confirmButton.style.display = '';
+
+    screen.appendChild(inputText);
+    screen.appendChild(confirmButton);
+
+    confirmButton.addEventListener('click', onConfirmClick);
   });
 </script>
 
