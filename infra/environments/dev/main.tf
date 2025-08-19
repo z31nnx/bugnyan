@@ -1,4 +1,5 @@
 terraform {
+  required_version = ">= 1.6.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -7,6 +8,32 @@ terraform {
   }
 }
 
+module "vpc-stack" {
+  source          = "../../modules/vpc-stack"
+  vpc_name        = var.vpc_name
+  cidr_block      = var.cidr_block
+  public_subnets  = var.public_subnets
+  private_subnets = var.private_subnets
+  nat_public_key  = var.nat_public_key
+  global_tags     = local.global_tags
+}
+
+module "sg-3tier-stack" {
+  source      = "../../modules/sg-3tier-stack"
+  sg_name     = var.sg_name
+  vpc_id      = module.vpc-stack.vpc_id
+  global_tags = local.global_tags
+}
+
+
+
+
+
+
+
+# OLD MODULE BUILD
+
+/*
 module "s3-stack" {
   source      = "../../modules/s3-static-site-stack"
   global_tags = local.global_tags
@@ -19,7 +46,6 @@ module "cloudfront-stack" {
   global_tags                            = local.global_tags
 }
 
-/*
 module "vpc-stack" {
   source      = "../../modules/vpc-stack"
   vpc_name    = var.vpc_name

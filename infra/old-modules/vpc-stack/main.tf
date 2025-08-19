@@ -1,26 +1,26 @@
-resource "aws_vpc" "bugnyan_vpc" {
+resource "aws_vpc" "bugnyan" {
   cidr_block       = var.cidr_block
   instance_tenancy = "default"
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.vpc_name}-vpc"
+      Name = "${var.vpc_name}"
     }
   )
 }
 
-resource "aws_eip" "bugnyan_nat_eip" {
+resource "aws_eip" "bugnyan_natgw_eip" {
   domain = "vpc"
 
   tags = merge(
     local.global_tags, {
-      Name = "${var.vpc_name}-nat-eip"
+      Name = "${var.vpc_name}-natgw-eip"
     }
   )
 }
 
 resource "aws_internet_gateway" "bugnyan_igw" {
-  vpc_id = aws_vpc.bugnyan_vpc.id
+  vpc_id = aws_vpc.bugnyan.id
 
   tags = merge(
     local.global_tags, {
@@ -30,8 +30,8 @@ resource "aws_internet_gateway" "bugnyan_igw" {
 }
 
 resource "aws_nat_gateway" "bugnyan_natgw" {
-  allocation_id = aws_eip.bugnyan_nat_eip.id
-  subnet_id     = aws_subnet.bugnyan_public_subnets[var.nat_public_key].id
+  allocation_id = aws_eip.bugnyan_natgw_eip.id
+  subnet_id     = aws_subnet.bugnyan_public_subnets["public_subnet_1"].id
 
   tags = merge(
     local.global_tags, {
@@ -41,12 +41,13 @@ resource "aws_nat_gateway" "bugnyan_natgw" {
 }
 
 resource "aws_subnet" "bugnyan_public_subnets" {
-  for_each = var.public_subnets
+  for_each = local.public_subnets
 
-  vpc_id                  = aws_vpc.bugnyan_vpc.id
-  cidr_block              = each.value.cidr_block
-  availability_zone       = each.value.az
-  map_public_ip_on_launch = true
+  vpc_id                                      = aws_vpc.bugnyan.id
+  cidr_block                                  = each.value.cidr_block
+  availability_zone                           = each.value.az
+  map_public_ip_on_launch                     = true
+  enable_resource_name_dns_a_record_on_launch = true
 
   tags = merge(
     local.global_tags, {
@@ -56,12 +57,13 @@ resource "aws_subnet" "bugnyan_public_subnets" {
 }
 
 resource "aws_subnet" "bugnyan_private_subnets" {
-  for_each = var.private_subnets
+  for_each = local.private_subnets
 
-  vpc_id                  = aws_vpc.bugnyan_vpc.id
-  cidr_block              = each.value.cidr_block
-  availability_zone       = each.value.az
-  map_public_ip_on_launch = false
+  vpc_id                                      = aws_vpc.bugnyan.id
+  cidr_block                                  = each.value.cidr_block
+  availability_zone                           = each.value.az
+  map_public_ip_on_launch                     = false
+  enable_resource_name_dns_a_record_on_launch = true
 
   tags = merge(
     local.global_tags, {
@@ -71,10 +73,10 @@ resource "aws_subnet" "bugnyan_private_subnets" {
 }
 
 resource "aws_route_table" "bugnyan_public_rt" {
-  vpc_id = aws_vpc.bugnyan_vpc.id
+  vpc_id = aws_vpc.bugnyan.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = local.allow_all
     gateway_id = aws_internet_gateway.bugnyan_igw.id
   }
 
@@ -86,11 +88,11 @@ resource "aws_route_table" "bugnyan_public_rt" {
 }
 
 resource "aws_route_table" "bugnyan_private_rt" {
-  vpc_id = aws_vpc.bugnyan_vpc.id
+  vpc_id = aws_vpc.bugnyan.id
 
   route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.bugnyan_natgw.id
+    cidr_block     = local.allow_all
+    nat_gateway_id = aws_nat_gateway.bugnyan_natgw.id
   }
 
   tags = merge(
