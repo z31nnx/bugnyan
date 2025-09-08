@@ -287,13 +287,29 @@
       </div>
       <div class="app-icon" data-app="confess">
         <img src="https://i.pinimg.com/736x/00/fd/f1/00fdf13bac70d9dfcb529d029e6c3020.jpg" />
-        <span>Confess</span>
+        <span>Voodoo</span>
       </div>
     </div>
   </div>
   <div class="app-screen" id="tarot-app" style="display: none; flex: 1; position: relative;">
   <iframe id="tarot-iframe" src="tarot/tarot.html" style="width: 100%; height: 100%; border: none;"></iframe>
   <button id="tarot-close-button" aria-label="Close tarot" style="
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    background: rgba(0,0,0,0.5);
+    border: none;
+    z-index: 10;
+  ">×</button>
+</div>
+<div class="app-screen" id="confess-app" style="display: none; flex: 1; position: relative;">
+  <iframe id="confess-iframe" src="confess/confess.html" style="width: 100%; height: 100%; border: none;"></iframe>
+  <button id="confess-close-button" aria-label="Close tarot" style="
     position: absolute;
     top: 10px;
     right: 15px;
@@ -505,6 +521,7 @@
     // Hide app menu
     document.getElementById('home-screen').style.display = 'none';
     document.getElementById("tarot-app").style.display = "none";
+    document.getElementById("confess-app").style.display = "none";
     // Hide chat top bar and clear chat messages only if any
     topBar.style.display = 'none';
 
@@ -543,7 +560,15 @@
       topBar.style.display = "none"; // hide Ai Enma bar
       document.getElementById("tarot-app").style.display = "flex";
       document.querySelector('#tarot-app iframe').src = `tarot/tarot.html?name=${name}`;
-    }else {
+    }
+    else if(app =="confess"){
+      screen.style.display = "none";
+      topBar.style.display = "none"; 
+      document.getElementById("confess-app").style.display = "flex";
+      document.querySelector('#confess-app iframe').src = `confess/confess.html?name=${name}`;
+    }
+    
+    else {
       const msg = document.createElement('div');
       msg.style.color = 'white';
       msg.style.textAlign = 'center';
@@ -555,6 +580,11 @@
 });
 document.getElementById('tarot-close-button').addEventListener('click', () => {
   document.getElementById('tarot-app').style.display = 'none';
+  document.getElementById('home-screen').style.display = 'flex';
+});
+
+document.getElementById('confess-close-button').addEventListener('click', () => {
+  document.getElementById('confess-app').style.display = 'none';
   document.getElementById('home-screen').style.display = 'flex';
 });
 
@@ -588,7 +618,6 @@ document.getElementById('tarot-close-button').addEventListener('click', () => {
           }
         }
       });
-
 
       document.querySelector('.notice').textContent = 'Music playing... enjoy the experience.';
     });
