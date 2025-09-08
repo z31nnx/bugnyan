@@ -1,32 +1,34 @@
 # Global Tags
-variable "project" {}
-variable "environment" {}
-variable "owner" {}
-variable "managedby" {}
-
-# VPC 
-variable "vpc_name" { type = string }
-variable "cidr_block" { type = string }
-variable "public_subnets" {
-  type = map(object({
-    cidr_block = string
-    az         = string
-  }))
-  default = {}
+variable "project" {
+  type = string
+}
+variable "environment" {
+  type = string
+}
+variable "owner" {
+  type = string
+}
+variable "managedby" {
+  type = string
 }
 
-variable "private_subnets" {
-  type = map(object({
-    cidr_block = string
-    az         = string
-  }))
-  default = {}
+variable "region" {
+  type = string
 }
 
-variable "nat_public_key" {
-  description = "The key to place the NAT in a specific subnet"
-  default     = "public_subnet_1"
+# S3 Variables
+variable "bucket_names" {
+  type = object({
+    web        = string
+    cloudfront = string
+  })
+}
+# CloudFront Variables
+
+variable "origin_id" {
+  type = string
 }
 
-# Security Groups
-variable "sg_name" { type = string }
+variable "oac_name" {
+  type = string
+}

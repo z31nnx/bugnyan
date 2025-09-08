@@ -10,6 +10,8 @@
 # AWS 
 **/.aws/
 **/*policy.json
+**/old-modules
+
 #s3-policy
 **/web-policy.json
 

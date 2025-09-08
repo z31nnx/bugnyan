@@ -1,16 +1,16 @@
 resource "aws_cloudfront_origin_access_control" "default" {
-  name                              = "bugnyan-web-oac"
+  name                              = "${var.name_prefix}-${var.oac_name}"
   description                       = "OAC for bugnyan S3 origin"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_distribution" "bugnyan_distribution" {
+resource "aws_cloudfront_distribution" "distribution" {
   origin {
-    domain_name              = var.web_bucket_domain_name
+    domain_name              = var.web_bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.default.id
-    origin_id                = local.bugnyan_s3_origin_id
+    origin_id                = "${var.name_prefix}-${var.origin_id}"
   }
 
   enabled             = true
@@ -20,14 +20,14 @@ resource "aws_cloudfront_distribution" "bugnyan_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = var.web_cloudfront_logs_bucket_domain_name
-    prefix          = "bugnyan-cloudfront-logs/"
+    bucket          = var.cloudfront_logs_bucket_domain_name
+    prefix          = "cloudfront-logs/"
   }
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.bugnyan_s3_origin_id
+    target_origin_id = "${var.name_prefix}-${var.origin_id}"
 
     forwarded_values {
       query_string = false
@@ -47,7 +47,7 @@ resource "aws_cloudfront_distribution" "bugnyan_distribution" {
     path_pattern     = "/content/immutable/*"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = local.bugnyan_s3_origin_id
+    target_origin_id = "${var.name_prefix}-${var.origin_id}"
 
     forwarded_values {
       query_string = false
@@ -68,7 +68,7 @@ resource "aws_cloudfront_distribution" "bugnyan_distribution" {
     path_pattern     = "/content/*"
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.bugnyan_s3_origin_id
+    target_origin_id = "${var.name_prefix}-${var.origin_id}"
 
     forwarded_values {
       query_string = false
@@ -93,8 +93,6 @@ resource "aws_cloudfront_distribution" "bugnyan_distribution" {
       locations        = ["US", "CA", "GB", "DE"]
     }
   }
-
-  tags = local.global_tags
 
   viewer_certificate {
     cloudfront_default_certificate = true
