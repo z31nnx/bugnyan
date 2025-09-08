@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+}
+body{
+  margin: 0;
+}
+.doll{
+  width: 270px;
+  margin: 20px auto 0;
+  position: relative;
+}
+.doll-svg{
+  width: 100%;
+  height: auto;
+}
+.head, .body, .foot{
+  position: relative;
+  cursor: pointer;
+}
+.pin{
+  position: absolute;
+  width: 60px;
+  height: 6px;
+  background: #000;
+  border-radius: 7px;
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+  &:after{
+    content: '';
+    display: block;
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    border: 6px solid #8d0303;
+  }
+  &._head{
+    top: 4%;
+    right: 25%;
+    transform: rotate(140deg);
+  }
+  &._body{
+    top: 50%;
+    left: 25%;
+    transform: rotate(-30deg);
+  }
+  &._foot{
+    bottom: 2%;
+    right: 12%;
+    transform: rotate(-140deg);
+  }
+}
+
