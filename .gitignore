@@ -1,3 +1,21 @@
+# .gitignore for Infra + Frontend Repo
+# Covers:
+# - Terraform state, plans, tfvars (sensitive infra data)
+# - AWS configs, certs, keys (cloud credentials & policies)
+# - Build outputs (frontend + CI/CD)
+# - Dev environments (Python, Node, Docker, IDEs)
+# - Secrets (.env, .secrets, .credentials)
+# - OS & editor junk files
+
+# AWS 
+**/.aws/
+**/*policy.json
+#s3-policy
+**/web-policy.json
+
+# User custom scratch area (temporary dev data)
+safe/
+
 # Local .terraform directories
 **/.terraform/
 **/.terraform.lock.hcl
@@ -32,6 +50,7 @@
 
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 # example: *tfplan*
+**/*.tfplan
 
 # Ignore CLI configuration files
 **/*.terraformrc
@@ -43,6 +62,11 @@
 **/*.so
 **/*.pyd
 **/*.pyc
+
+# CI/CD
+**/out/
+**/.serverless/
+**/.next/
 
 # C extensions build output
 **/build/
@@ -153,9 +177,3 @@
 **/*.pfx
 **/*.p12
 **/*.jks
-
-# User custom scratch area (temporary dev data)
-safe/
-
-#s3-policy
-**/web-policy.json
