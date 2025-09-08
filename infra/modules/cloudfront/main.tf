@@ -21,7 +21,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   logging_config {
     include_cookies = false
     bucket          = var.cloudfront_logs_bucket_domain_name
-    prefix          = "cloudfront-logs/"
+    prefix          = "${var.name_prefix}-cloudfront-logs/"
   }
 
   default_cache_behavior {
