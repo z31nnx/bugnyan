@@ -1,0 +1,76 @@
+name: terraform-ci
+
+on:
+  pull_request:
+    branches: [ "main", "bug", "neme" ]
+    paths:
+      - '**/*.tf'
+      - '.tflint.hcl'
+      - '.github/workflows/**'
+      - 'envs/**'
+      - 'modules/**'
+  push:
+    branches: [ "main", "bug", "neme" ]
+    paths:
+      - '**/*.tf'
+      - '.tflint.hcl'
+      - '.github/workflows/**'
+      - 'envs/**'
+      - 'modules/**'
+  workflow_dispatch:
+  schedule:
+    - cron: '27 4 * * 3'  # weekly runs 
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  terraform:
+    name: Terraform CI
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        envdir: [ "infra/envs/dev", "infra/envs/prod" ]  # add "terraform/envs/stage", "terraform/envs/prod" later
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: terraform fmt (check)
+        run: terraform fmt -check -recursive
+      - name: init (no backend)
+        run: terraform -chdir=${{ matrix.envdir }} init -backend=false
+      - name: validate env
+        run: terraform -chdir=${{ matrix.envdir }} validate
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.53.0
+      - name: Cache TFLint plugins
+        uses: actions/cache@v4
+        with:
+          path: ~/.tflint.d/plugins
+          key: ${{ runner.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+      - name: TFLint
+        run: tflint --init && tflint --recursive
+
+  tfsec:
+    name: tfsec SARIF
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: tfsec (SARIF)
+        uses: aquasecurity/tfsec-sarif-action@21ded20e8ca120cd9d3d6ab04ef746477542a608
+        with:
+          sarif_file: tfsec.sarif
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: tfsec.sarif
+
