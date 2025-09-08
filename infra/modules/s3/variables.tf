@@ -8,4 +8,3 @@ variable "bucket_names" {
     cloudfront = string
   })
 }
-

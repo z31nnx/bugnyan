@@ -24,6 +24,14 @@ on:
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
+  
+permissions:
+  contents: read
+env:
+  TF_IN_AUTOMATION: 'true'
+  TF_INPUT: 'false'
+  TF_CLI_ARGS: '-no-color'
+
 
 jobs:
   terraform:

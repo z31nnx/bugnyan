@@ -3,11 +3,6 @@ resource "aws_s3_bucket" "web" {
   force_destroy = true # default is false
 }
 
-resource "aws_s3_bucket_policy" "web_bucket_policy" {
-  bucket = aws_s3_bucket.web.id
-  policy = file("${path.module}/web-policy.json")
-}
-
 resource "aws_s3_bucket_ownership_controls" "web_bucket_ownership" {
   bucket = aws_s3_bucket.web.id
 
@@ -15,7 +10,6 @@ resource "aws_s3_bucket_ownership_controls" "web_bucket_ownership" {
     object_ownership = "BucketOwnerPreferred"
   }
 }
-
 
 resource "aws_s3_bucket_public_access_block" "web_public_access" {
   bucket = aws_s3_bucket.web.id

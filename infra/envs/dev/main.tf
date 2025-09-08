@@ -30,6 +30,8 @@ module "cloudfront" {
   source                             = "../../modules/cloudfront"
   oac_name                           = var.oac_name
   origin_id                          = var.origin_id
+  bucket_names                       = module.s3.bucket_names["web"]
+  bucket_arns                        = module.s3.bucket_arns["web"]
   web_bucket_regional_domain_name    = module.s3.bucket_regional_domain_names["web"]
   cloudfront_logs_bucket_domain_name = module.s3.bucket_domain_names["cloudfront"]
   name_prefix                        = local.name_prefix

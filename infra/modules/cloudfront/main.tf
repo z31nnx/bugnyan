@@ -6,7 +6,7 @@ resource "aws_cloudfront_origin_access_control" "default" {
   signing_protocol                  = "sigv4"
 }
 
-resource "aws_cloudfront_distribution" "distribution" {
+resource "aws_cloudfront_distribution" "web_distribution" {
   origin {
     domain_name              = var.web_bucket_regional_domain_name
     origin_access_control_id = aws_cloudfront_origin_access_control.default.id

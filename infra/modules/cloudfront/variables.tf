@@ -14,3 +14,11 @@ variable "cloudfront_logs_bucket_domain_name" {
 variable "origin_id" {
   type = string
 }
+
+variable "bucket_names" {
+  type = string
+}
+
+variable "bucket_arns" {
+  type = string
+}
